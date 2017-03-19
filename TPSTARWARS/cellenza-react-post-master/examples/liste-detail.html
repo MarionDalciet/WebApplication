@@ -1,0 +1,175 @@
+<html>
+<head>
+    <style type="text/css">
+        div {
+            border: solid black 1px;
+            display: inline-block;
+            padding: 10px;
+            margin: 10px;
+            font-size: 1.3em;
+        }
+
+         body {background-image:url("fond.jpg"); font-weight: bold; color: #FFFFFF}
+    </style>
+</head>
+
+<body>
+
+    <div id="root"></div>
+
+    <script type="text/javascript" src="../react/react.js"></script>
+    <script type="text/javascript" src="../react/JSXTransformer.js"></script>
+    <script type="text/javascript">
+	
+	var quotes = [{
+	  'author': 'Yoda',
+	  'quote': 'When 900 years old, you reach… Look as good, you will not.'
+	}, {
+	  'author': 'Senator palpatine',
+	  'quote': 'The Dark Side of the Force is the pathway to many abilities some consider to be.. Unnatural.'
+	}, {
+	  'author': 'Count Dooku',
+	  'quote': 'I sense great fear in you, Skywalker. You have hate… you have anger… but you don’t use them.'
+	}, {
+	  'author': 'Darth vader',
+	  'quote': 'Luke, you can destroy the Emperor. He has foreseen this. It is your destiny. Join me, and together we can rule the galaxy as father and son.'
+	}, {
+	  'author': 'Princess leila',
+	  'quote': 'Aren\'t you a little short for a storm trooper?'
+	}, {
+	  'author': 'Yoda',
+	  'quote': 'Mmm. Lost a planet, Master Obi-Wan has. How embarrassing.'
+	}, {
+	  'author': 'Qui-Gon Jinn',
+	  'quote': 'Your focus determines your reality'
+	}, {
+	  'author': 'Yoda',
+	  'quote': 'Do. Or do not. There is no try.'
+	}, {
+	  'author': 'Obi-Wan-Kenobi',
+	  'quote': 'In my experience there is no such thing as luck.'
+	}, {
+	  'author': 'Yoda',
+	  'quote': 'If once you start down the dark side, forever will it dominate your destiney, consume you it will, as it did Obi-Wan\'s apprentice'
+	}, {
+	  'author': 'Darth Vader',
+	  'quote': 'The Force is strong with this one.'
+	}];
+	var scoreOf = {};
+    var scoreIs = function(point) {
+            return function (letter) {
+                scoreOf[letter] = point;
+            };
+        };
+       
+	var letters = [quotes[0].author,quotes[1].author,quotes[2].author,quotes[3].author,quotes[4].author,quotes[6].author,quotes[8].author];
+
+	
+	function aleatoire_Y() {
+		var liste = [quotes[0].quote,quotes[5].quote, quotes[7].quote, quotes[9].quote ];
+		var result = liste[Math.floor(Math.random()*liste.length)];
+		return result;
+	}
+	
+	function aleatoire_V() {
+		var liste = [quotes[3].quote, quotes[10].quote];
+		var result = liste[Math.floor(Math.random()*liste.length)];
+		return result;
+	}
+
+	
+	[quotes[0].author].forEach(scoreIs(aleatoire_Y()));
+	[quotes[1].author].forEach(scoreIs(quotes[1].quote));
+	[quotes[2].author].forEach(scoreIs(quotes[2].quote));
+	[quotes[3].author].forEach(scoreIs(aleatoire_V()));
+	[quotes[4].author].forEach(scoreIs(quotes[4].quote));
+	[quotes[6].author].forEach(scoreIs(quotes[6].quote));
+	[quotes[8].author].forEach(scoreIs(quotes[8].quote));
+	
+	function viewImage(id) {
+                document.getElementById(id).innerHTML="<img src='yoda.jpeg'>";
+            }
+	    
+
+                        
+    </script>
+    
+	<div id="bouton" onclick="javascript:viewImage('image');"> Afficher l'image  </div>
+	<div id="image"></div>
+	
+	
+	
+	
+	
+    <script type="text/jsx">
+
+    var Tree =  React.createClass({
+	
+        render : function () {
+            return (<div>
+                <Letters onLetterSelected={this.selectLetter}/>
+                <Score letter={this.state.letter}/>
+            </div>);
+        },
+
+        getInitialState : function() {
+            return{
+                letter : ''
+            }
+        },
+
+        selectLetter : function (newLetter) {
+            return this.setState({letter : newLetter});
+        }
+    });
+
+    var Letters = React.createClass({
+
+        render : function () {
+            var handler = this.props.onLetterSelected;
+
+            return (<div>
+                {letters.map(function(item) {
+                    return <Letter itemValue={item} whenClick={handler} />;
+                })}
+            </div>);
+        },
+
+    });
+
+    var Letter = React.createClass({
+
+        render : function () {
+            var classname = this.state.selected ? 'selected' : '';
+            return (<div className={classname} onClick={this.handleClick}>{this.props.itemValue}</div>);
+        },
+
+        getInitialState : function () {
+            return {selected : false };
+        },
+
+        handleClick : function () {
+            this.props.whenClick(this.props.itemValue);
+            this.setState({selected : true});
+        }
+    });
+              
+
+    var Score = React.createClass({
+
+        render : function () {
+            return (<div>
+                {this.props.letter} a dit :" {scoreOf[this.props.letter]} "
+            </div>);
+        },
+
+    });
+
+
+    React.render(<Tree />, document.getElementById('root'));
+
+    </script>
+    </script>
+    
+	</body>
+</html>
